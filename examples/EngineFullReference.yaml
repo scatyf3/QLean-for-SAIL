@@ -1,0 +1,61 @@
+# Field reference: BF16 -> W8A8 for 2D projection weights. Adapt match before use.
+# Optional fields show their defaults unless stated otherwise.
+quant_stage:
+  quantization_modifiers:
+    GeneralQuantEngineModifier:
+      # Output
+      primary_scheme: W8A8              # Optional (default: null); required by compressed_tensors.
+      config_writer: compressed_tensors # Optional; compressed_tensors | mixed_precision_w4 | none.
+      sglang_wa: auto                   # Optional; auto | true | false. auto enables WA for MXFP4.
+      scale_naming: underscore          # Optional; underscore: x.weight_scale | dot: x.scale.
+      # mixed_precision_w4 requires an experts region and at least one dst: acext_int4.
+
+      # Execution
+      num_gpus: 0                       # Optional; 0 = all visible GPUs.
+      resume: true                      # Optional; reuse completed shards with matching fingerprints.
+      force_rerun: false                # Optional; skip cleanup confirmation, not resume checks.
+      verify: "off"                     # Optional; "off" | bound. bound writes CSV reports only.
+
+      # Source dequantization
+      hidden_size: null                 # Optional; read from config.json for unpack + transpose: auto.
+      extra_source_index: null          # Optional; extra index referencing shards in model_path.
+      dequant_dtype: fp32               # Optional; fp32 | bf16. Intermediate precision.
+      dequant_block_size: 128           # Optional; FP8 block source block size.
+      int4_group_size: 32               # Optional; INT4 source group size; positive integer.
+      nvfp4_group_size: 16              # Optional; NVFP4 source group size.
+
+      # INT4 scale search (dst: acext_int4 only)
+      scale_search: absmax              # Optional; absmax (row absmax/7) | mse.
+      mse_divisor_min: 4.0              # Optional; MSE grid lower bound; > 0.
+      mse_divisor_max: 24.0             # Optional; inclusive upper bound; > min.
+      mse_divisor_step: 0.25            # Optional; MSE grid step; > 0.
+
+      # Regions: first match wins; every pattern must match source tensors.
+      # src: bf16 | fp8_block | nvfp4 | int4 | mxfp4 | mxfp8 (case-insensitive).
+      # dst: W8A8 | MXFP4 | FP8_DYNAMIC | FP8_BLOCK | acext_int4 | bf16 | passthrough.
+      regions:                          # Required; nonempty ordered list.
+        - name: ignore                  # Copy unquantized tensors; omit src/dst.
+          match:                        # Optional (default: "*"); full-name glob or OR list; no re:.
+            - "*norm*"
+            - "*embed_tokens.weight"
+            - "*lm_head.weight"
+
+        - name: experts                 # Required; unique name. experts updates expert_dtype.
+          match: "*.experts.*_proj.weight"
+          src: bf16                     # Optional; source format. bf16 means no dequantization.
+          dst: W8A8                     # Optional (default: null/copy); required for non-bf16 src.
+          when: always                  # Optional; always | has_source_scale | no_source_scale.
+          expert_mode: none             # Optional; none | unpack. unpack requires 3D input.
+          split_gate_up: false          # Optional; split gate_up_proj when unpacking.
+          transpose: auto               # Optional; auto | true | false; unpack only.
+
+        - name: dense                   # Remaining projection weights after ignore/experts.
+          match: "*_proj.weight"
+          src: bf16                     # Optional; source format.
+          dst: W8A8                     # Optional (default: null/copy); target format.
+          chunked: false                # Optional; 2D mxfp8 -> W8A8/FP8_DYNAMIC; no unpack/split.
+          # chunk_rows: 1048576         # Optional; positive integer; only with chunked: true.
+
+        # Required last region: copy only, no src/dst. Zero routed hits are allowed.
+        - name: fallback
+          match: "*"

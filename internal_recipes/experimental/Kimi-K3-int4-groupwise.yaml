@@ -1,0 +1,29 @@
+# Experimental recipe: int4_groupwise is intentionally absent from the supported dst list.
+# GeneralQuantEngineModifier rejects this recipe with "invalid dst" during initialization.
+# Target: MoE-only symmetric INT4 groupwise weights, group size 32, with BF16 stored scales.
+# This describes the weight format only and does not prescribe activation precision.
+# Group size 32 is currently an internal operator default, not a public recipe parameter.
+# CT triplet: weight_packed=I32, weight_scale=BF16, weight_shape=I64.
+quant_stage:
+  quantization_modifiers:
+    GeneralQuantEngineModifier:
+      num_gpus: 15
+      resume: true
+      force_rerun: false
+      primary_scheme: int4_groupwise
+      config_writer: compressed_tensors
+      sglang_wa: false
+      dequant_dtype: bf16
+
+      regions:
+        - name: ignore
+          match: "*norm*"
+
+        - name: experts
+          match: "*.block_sparse_moe.experts.*.w[123].weight_packed"
+          src: mxfp4
+          dst: int4_groupwise
+
+        # Keep attention, dense MLPs, shared experts, routing projections, and vision unchanged.
+        - name: fallback
+          match: "*"

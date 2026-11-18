@@ -1,0 +1,7 @@
+quant_stage:
+  quant_modifiers:
+    generalDay0Modifier:
+      ignore: ["re:.*lm_head", "re:.*embed_tokens", "re:.*block_sparse_moe.gate$", "re:.*multi_modal_projector.*", "re:.*patch_merge_mlp.*", "re:.*vision.*"]
+      fp8_channelwise_layers: ["re:.*self_attn.*", "re:.*block_sparse_moe.shared_experts.*", "re:.*mlp.down_proj.*", "re:.*mlp.gate_proj.*", "re:.*mlp.up_proj.*"]
+      mxfp4_layers: ["re:.*block_sparse_moe.experts.*"]
+      scheme: MXFP4

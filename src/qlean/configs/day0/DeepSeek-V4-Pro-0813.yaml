@@ -1,0 +1,31 @@
+quant_stage:
+  quantization_modifiers:
+    GeneralQuantEngineModifier:
+      num_gpus: 0
+      resume: true
+      force_rerun: false
+
+      config_writer: compressed_tensors
+      primary_scheme: W8A8
+      sglang_wa: false
+      dequant_block_size: 128
+      scale_naming: dot
+
+      regions:
+        - name: ignore
+          match: "*norm.*"
+
+        - name: experts
+          match: "*.ffn.experts.*.weight"
+          src: MXFP4
+          when: has_source_scale
+          dst: W8A8
+
+        - name: dense
+          match: "*.weight"
+          src: FP8_Block
+          when: has_source_scale
+          dst: W8A8
+
+        - name: fallback
+          match: "*"

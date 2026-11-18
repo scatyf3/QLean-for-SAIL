@@ -1,0 +1,50 @@
+name: QLean feature request
+description: Propose a new capability or improvement
+title: "[Feature]: "
+type: Feature
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Propose a new capability or improvement. Describe the need and its value; acceptance criteria
+        and a test plan can be refined with maintainers. Use the Task form for implementation, testing,
+        documentation, refactoring, or maintenance work. Check
+        [existing requests](https://github.com/t-head/QLean-for-SAIL/issues?q=is%3Aissue%20type%3AFeature) first
+        and link related discussions. Issues are public; do not include internal-only information.
+  - type: textarea
+    id: requirement
+    attributes:
+      label: Requirement description
+      description: Describe the capability or improvement you need and its scope. Include relevant model, format, or hardware constraints; a detailed implementation proposal is not required.
+    validations:
+      required: true
+  - type: textarea
+    id: background
+    attributes:
+      label: Background and value
+      description: Who benefits and in which use cases? Is this specific to a model family, quantization format, or PPU platform? How does it improve current workflows, and how urgent is it?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: |
+        If known, define measurable completion conditions, such as supported source and target formats,
+        expected numerical tolerance, throughput or memory targets, compatibility, and documentation.
+    validations:
+      required: false
+  - type: textarea
+    id: test-plan
+    attributes:
+      label: Test plan
+      description: If known, describe the models, recipes, environments, and checks that would validate the change. This can be completed later with maintainers.
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds
+      description: How do you handle this today, what alternatives did you consider, and what limitations remain?
+    validations:
+      required: false

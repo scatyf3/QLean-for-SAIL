@@ -1,0 +1,15 @@
+quant_stage:
+  quant_modifiers:
+    dpskV4mixDequantModifier: {}
+    dpskV4mixGeneralDay0Modifier:
+      ignore:
+        - "re:.*head$"
+        - "re:.*embed$"
+        - "re:.*ffn.gate$"
+        - "re:.*attn.compressor.wkv.*"
+        - "re:.*attn.compressor.wgate.*"
+        - "re:.*attn.indexer.compressor.wkv.*"
+        - "re:.*attn.indexer.compressor.wgate.*"
+        - "re:.*attn.indexer.weights_proj.*"
+        - "re:.*mtp.0.emb.tok_emb$"
+      scheme: W8A8

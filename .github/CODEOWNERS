@@ -1,0 +1,18 @@
+# Review ownership for the QLean repository.
+# Code Owner is a domain attribute of Reviewers and Maintainers, not a
+# separate role. Teams must exist in the t-head organization with write access
+# before these rules take effect.
+
+*                               @t-head/qlean-maintainers
+
+/.github/                       @t-head/qlean-maintainers
+/.github/CODEOWNERS             @t-head/qlean-maintainers
+/ci/                            @t-head/qlean-maintainers
+/setup.py                       @t-head/qlean-maintainers
+/LICENSE                        @t-head/qlean-maintainers
+/NOTICE                         @t-head/qlean-maintainers
+
+/src/qlean/                    @t-head/qlean-reviewers
+/internal_recipes/              @t-head/qlean-reviewers
+/tests/                         @t-head/qlean-reviewers
+/docs/                          @t-head/qlean-reviewers

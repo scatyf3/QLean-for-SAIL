@@ -1,0 +1,5 @@
+quant_stage:
+  quant_modifiers:
+    dequantModifier: {}
+    fp8BasedDay0Modifier:
+      scheme: W8A8

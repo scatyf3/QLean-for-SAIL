@@ -1,0 +1,73 @@
+name: QLean bug report
+description: Report unexpected behavior, wrong results, a crash, a hang, or a build failure
+title: "[Bug]: "
+type: Bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the unexpected behavior and how to reproduce it. Issues and attachments are public:
+        remove credentials, private endpoints, and confidential model or dataset details before sharing,
+        but keep the technical content intact. For security-sensitive reports, follow the private
+        reporting guidance in [CONTRIBUTING.md](https://github.com/t-head/QLean-for-SAIL/blob/main/CONTRIBUTING.md)
+        instead of opening a public issue.
+        Check [existing issues](https://github.com/t-head/QLean-for-SAIL/issues) for related reports and link them if useful.
+  - type: dropdown
+    id: symptom
+    attributes:
+      label: Observed behavior
+      options:
+        - Incorrect conversion or numerical result
+        - Application crash or runtime error
+        - Application hang or timeout
+        - Build or installation failure
+        - Lower throughput or higher memory usage than expected
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+      description: Describe what you expected and what happened. Include the first error or warning, and how it affects your use case.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: |
+        Include the full `qlean` command, the recipe (or `--output-format`), the model name and
+        architecture, and how often the failure occurs. If an earlier version worked, name it. If you
+        cannot share a reproducer, describe the triggering scenario and the steps taken before it occurred.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: QLean version or commit
+      description: The version from `pip show qlean`, or the commit for a source build.
+      placeholder: "e.g. 0.3.0"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Execution environment
+      description: |
+        Include the OS, Python, PyTorch, and Triton versions (including build suffixes), the PPU model,
+        and whether you ran on bare metal or in a container (with the image version if known).
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and configuration
+      description: |
+        Provide a redacted log or traceback that preserves the relevant error messages and context.
+        Remove credentials, private endpoints, and sensitive hostnames, addresses, and paths.
+        If no log is available, state that explicitly. For conversion or accuracy problems, include
+        the source and target formats, tensor shapes and dtypes where relevant, and a small synthetic
+        example if possible.
+    validations:
+      required: true

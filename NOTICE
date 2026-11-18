@@ -1,0 +1,22 @@
+qlean NOTICE
+============
+
+Copyright (c) 2025-2026 T-Head (Shanghai) Semiconductor Co., Ltd.
+All rights reserved.
+
+SPDX-License-Identifier: Apache-2.0
+The qlean-owned portions of this product are licensed under the Apache License,
+Version 2.0 included in LICENSE.
+
+This product contains third-party source code from Triton:
+https://github.com/triton-lang/triton
+
+The following files are derived from Triton (python/triton_kernels/) and are
+covered by the Triton MIT License. A copy of the License is included in
+LICENSES/MIT.txt:
+
+- src/qlean/utils/downcast_to_mxfp.py
+- src/qlean/utils/upcast_from_mxfp.py
+
+Copyright 2018-2020 Philippe Tillet
+Copyright 2020-2022 OpenAI

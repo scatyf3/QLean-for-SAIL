@@ -1,0 +1,7 @@
+quant_stage:
+  quant_modifiers:
+    generalDay0Modifier:
+      ignore: ["re:.*lm_head", "re:.*embed_tokens", "re:visual.*", "re:model.visual.*", "re:.*mlp.shared_expert_gate$", "re:.*mlp.gate$", "re:.*conv1d$", "re:.*in_proj_a$", "re:.*in_proj_b$", "re:.*fc$", "re:.*pre_fc_norm_embedding$", "re:.*pre_fc_norm_hidden$", "re:.*mtp.*"]
+      fp8_channelwise_layers: ["re:.*linear_attn.*", "re:.*self_attn.*", "re:.*mlp.shared_expert.*"]
+      mxfp4_layers: ["re:.*mlp.experts.*"]
+      scheme: MXFP4

@@ -1,0 +1,40 @@
+quant_stage:
+  quantization_modifiers:
+    GeneralQuantEngineModifier:
+      num_gpus: 0
+      resume: true
+      force_rerun: false
+
+      config_writer: compressed_tensors
+      primary_scheme: MXFP4
+      sglang_wa: auto
+      dequant_block_size: 32
+      scale_naming: dot
+
+      regions:
+        - name: ignore
+          match: "*norm.*"
+
+        - name: experts
+          match: "*.ffn.experts.*.weight"
+          src: MXFP4
+          dst: PASSTHROUGH
+
+        - name: engram_embed
+          match: "*.engram.embed.weight"
+          src: MXFP8
+          dst: PASSTHROUGH
+
+        - name: engram_wkv
+          match: "*.engram.wkv.weight"
+          src: FP8_Block
+          dst: BF16
+
+        - name: dense
+          match: "*.weight"
+          src: FP8_Block
+          when: has_source_scale
+          dst: FP8_DYNAMIC
+
+        - name: fallback
+          match: "*"

@@ -1,0 +1,8 @@
+quant_stage:
+  quant_modifiers:
+    int4DequantModifier: {}
+    generalDay0Modifier:
+      ignore: ["re:.*lm_head", "re:.*embed_tokens", "re:vision.*", "re:mm_projector.*", "re:.*mlp.gate$"]
+      fp8_channelwise_layers: ["re:.*self_attn.*", "re:.*mlp.shared_experts.*", "re:.*mlp.down_proj.*", "re:.*mlp.gate_proj.*", "re:.*mlp.up_proj.*"]
+      mxfp4_layers: ["re:.*mlp.experts.*"]
+      scheme: MXFP4

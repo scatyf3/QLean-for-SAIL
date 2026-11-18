@@ -1,0 +1,8 @@
+quant_stage:
+  quant_modifiers:
+    mixedPrecisionModifier:
+      layers: ['88', '89', '92-93']
+      num_layers: 94
+      # ifDebug: True
+      # ifShard: True
+      # ifMoveSafetensors: True

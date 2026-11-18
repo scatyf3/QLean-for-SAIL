@@ -1,0 +1,27 @@
+# This is a predefined file for environment rules.
+---
+rules: []
+  # - name: "deepseek-ai/DeepSeek-V3.1"
+  #   pip_packages:
+  #     - "numpy==2.2.0"
+  #     - "llmcompressor==0.8.1"
+  #     - "scikit-learn==1.6.0"
+  
+  # - name: "deepseek-ai/DeepSeek-R1"
+  #   pip_packages:
+  #     - "numpy==2.2.0"
+  #     - "llmcompressor==0.8.1"
+  #     - "scikit-learn==1.6.0"
+  
+  # - name: "Qwen/Qwen3-VL-235B-A22B-Instruct"
+  #   pip_packages:
+  #     - "transformers==4.57.1"
+  #     - "setuptools_scm"
+  #     - "torchvision"
+  #     - "git+https://github.com/vllm-project/llm-compressor.git@37cfe8e#egg=llmcompressor"
+  #     - "git+https://github.com/vllm-project/compressed-tensors.git@52792be#egg=compressed-tensors"
+
+fallback:
+  name: "day0"
+  pip_packages: []
+...

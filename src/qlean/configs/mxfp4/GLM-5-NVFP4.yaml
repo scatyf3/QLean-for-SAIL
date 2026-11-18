@@ -1,0 +1,6 @@
+quant_stage:
+  quant_modifiers:
+    nvfp4DequantModifier: {}
+    nvfp4BasedMxfp4Day0Modifier:
+      ignore: ["re:.*lm_head", "re:.*embed_tokens", "re:.*mlp.gate$", "re:.*self_attn.indexer.weights_proj$", "re:.*eh_proj$", "re:.*self_attn.*", "re:.*mlp.down_proj.*", "re:.*mlp.gate_proj.*", "re:.*mlp.up_proj.*", "re:.*shared_experts.*"]
+      scheme: MXFP4

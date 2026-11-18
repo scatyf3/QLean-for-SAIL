@@ -1,0 +1,48 @@
+quant_stage:
+  quantization_modifiers:
+    GeneralQuantEngineModifier:
+      num_gpus: 0
+      resume: true
+      force_rerun: false
+
+      config_writer: compressed_tensors
+      primary_scheme: MXFP4
+      sglang_wa: auto
+      dequant_block_size: 128
+      dequant_dtype: fp32
+
+      regions:
+        - name: ignore
+          match:
+            - "*lm_head*"
+            - "*embed_tokens*"
+            - "model.visual.*"
+            - "*norm.*"
+            - "*mlp.gate.*"
+            - "*mlp.shared_expert_gate.*"
+            - "*.self_attn.indexer.index_qk_proj.*"
+            - "*conv1d.*"
+            - "*in_proj_a.*"
+            - "*in_proj_b.*"
+            - "*pre_fc_norm_embedding.*"
+            - "*pre_fc_norm_hidden.*"
+            - "*mtp.*"
+
+        - name: experts
+          match: "*mlp.experts.*_proj"
+          src: BF16
+          dst: MXFP4
+          expert_mode: unpack
+          split_gate_up: true
+          transpose: false
+
+        - name: dense
+          match:
+            - "*linear_attn.*.weight"
+            - "*self_attn.*.weight"
+            - "*mlp.shared_expert.*.weight"
+          src: BF16
+          dst: FP8_DYNAMIC
+
+        - name: fallback
+          match: "*"

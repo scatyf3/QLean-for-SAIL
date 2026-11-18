@@ -1,0 +1,6 @@
+quant_stage:
+  quant_modifiers:
+    nvfp4DequantModifier: {}
+    nvfp4BasedMxfp4Day0Modifier:
+      ignore: ["re:.*lm_head", "re:.*embed_tokens", "re:.*gate.*", "re:.*self_attn.*"]
+      scheme: MXFP4

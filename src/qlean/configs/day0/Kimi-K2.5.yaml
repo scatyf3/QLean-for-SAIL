@@ -1,0 +1,6 @@
+quant_stage:
+  quant_modifiers:
+    int4DequantModifier: {}
+    generalDay0Modifier:
+      ignore: ["re:.*lm_head", "re:.*embed_tokens", "re:.*mlp.shared_experts.*", "re:vision.*", "re:mm_projector.*", "re:.*self_attn.*", "re:.*mlp.gate$"]
+      scheme: W8A8

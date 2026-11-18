@@ -1,0 +1,5 @@
+quant_stage:
+  quant_modifiers:
+    generalDay0Modifier:
+      ignore: ["re:.*lm_head", "re:.*embed_tokens", "re:visual.*", "re:model.visual.*", "re:.*conv1d$", "re:.*in_proj_a$", "re:.*in_proj_b$", "re:.*fc$", "re:.*pre_fc_norm_embedding$", "re:.*pre_fc_norm_hidden$", "re:.*mtp.*"]
+      scheme: W8A8

@@ -1,0 +1,8 @@
+quant_stage:
+  quant_modifiers:
+    generalDay0Modifier:
+      ignore: ["re:.*lm_head", "re:.*embed_tokens", "re:visual.*", "re:model.visual.*", "re:.*mlp.gate$"]
+      scheme: W8A8
+    mixedPrecisionModifier:
+      layers: ['90-93']
+      num_layers: 94

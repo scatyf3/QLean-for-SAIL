@@ -1,0 +1,5 @@
+quant_stage:
+  quant_modifiers:
+    generalDay0Modifier:
+      ignore: ["re:.*lm_head", "re:.*embed_tokens", "re:.*block_sparse_moe.gate$", "re:.*multi_modal_projector.*", "re:.*patch_merge_mlp.*", "re:.*vision.*"]
+      scheme: W8A8

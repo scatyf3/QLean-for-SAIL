@@ -1,0 +1,4 @@
+quant_stage:
+  quant_modifiers:
+    generalDay0Modifier:
+      scheme: W8A8

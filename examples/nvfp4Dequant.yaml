@@ -1,0 +1,4 @@
+# This is a recipe example file.
+dequant_stage:
+  dequant_modifiers:
+    nvfp4DequantModifier: {}

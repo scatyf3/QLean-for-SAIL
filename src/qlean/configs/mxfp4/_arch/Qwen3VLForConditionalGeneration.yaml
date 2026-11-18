@@ -1,0 +1,5 @@
+quant_stage:
+  quant_modifiers:
+    generalDay0Modifier:
+      ignore: ["re:.*lm_head", "re:.*embed_tokens", "re:visual.*", "re:model.visual.*", "re:.*mlp.gate$", "re:.*mtp.*"]
+      scheme: MXFP4

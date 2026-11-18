@@ -1,0 +1,38 @@
+quant_stage:
+  quant_modifiers:
+    GeneralQuantEngineModifier:
+      primary_scheme: W8A8
+      config_writer: compressed_tensors
+      scale_naming: underscore
+      sglang_wa: false
+      dequant_dtype: fp32
+      regions:
+        - name: ignore
+          match:
+            - '*lm_head.*'
+            - '*embed_tokens.*'
+            - '*word_embeddings.*'
+            - '*tok_embeddings.*'
+            - '*wte.*'
+            - '*wpe.*'
+            - '*embed_in.*'
+            - '*embed_out.*'
+            - '*embed_positions.*'
+            - '*position_embeddings.*'
+            - '*token_type_embeddings.*'
+            - '*norm.*'
+          src: bf16
+        - name: experts
+          match:
+            - 'experts.*.weight'
+            - '*.experts.*.weight'
+            - 'experts.*.weight_packed'
+            - '*.experts.*.weight_packed'
+          src: bf16
+          dst: W8A8
+        - name: weights
+          match: ['*.weight', '*.weight_packed']
+          src: bf16
+          dst: W8A8
+        - name: fallback
+          match: '*'

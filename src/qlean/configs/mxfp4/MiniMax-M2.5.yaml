@@ -1,0 +1,8 @@
+quant_stage:
+  quant_modifiers:
+    dequantModifier: {}
+    generalDay0Modifier:
+      ignore: ["re:.*lm_head", "re:.*embed_tokens", "re:.*gate.*"]
+      fp8_channelwise_layers: ["re:.*self_attn.*"]
+      mxfp4_layers: ["re:.*block_sparse_moe.experts.*"]
+      scheme: MXFP4

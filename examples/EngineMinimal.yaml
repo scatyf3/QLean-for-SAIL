@@ -1,0 +1,15 @@
+# BF16 -> W8A8 for Llama-style 2D projection weights; all other tensors are copied.
+# Adapt match to your checkpoint. See EngineFullReference.yaml for optional settings.
+quant_stage:
+  quantization_modifiers:
+    GeneralQuantEngineModifier:
+      primary_scheme: W8A8       # Required by the default config_writer: compressed_tensors.
+      regions:                   # Required; first matching region wins.
+        - name: linear           # Required; unique region name.
+          match: "*_proj.weight" # Optional; default: "*". Select only 2D projection weights.
+          src: bf16              # Optional; default: bf16.
+          dst: W8A8              # Required for quantization; omitting it means copy.
+
+        # Required final fallback: copy only; omit src and dst.
+        - name: fallback
+          match: "*"
