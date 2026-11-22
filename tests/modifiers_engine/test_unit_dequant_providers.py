@@ -56,8 +56,11 @@ def test_fp8_provider_blocks_tail_and_experts(block_size, batched, target):
 @pytest.mark.parametrize("group_size", [16, 32])
 @pytest.mark.parametrize("target", ["fp32", "bf16"])
 @pytest.mark.parametrize("name", ["x.weight", "x.weight_packed"])
-@pytest.mark.parametrize("global_name", ["x.weight_scale_2", "x.weight_global_scale"])
-def test_nvfp4_local_global_scale_and_tail(group_size, target, name, global_name):
+@pytest.mark.parametrize("global_name, global_value", [
+    ("x.weight_scale_2", 0.5),  # ModelOpt: multiplier
+    ("x.weight_global_scale", 2.0),  # compressed-tensors: divisor
+])
+def test_nvfp4_local_global_scale_and_tail(group_size, target, name, global_name, global_value):
     import torch
     from qlean.modifiers_engine._runtime.dequant_providers import nvfp4
 
@@ -66,7 +69,7 @@ def test_nvfp4_local_global_scale_and_tail(group_size, target, name, global_name
     raw = torch.tensor([payload, payload], dtype=torch.uint8)
     groups = (34 + group_size - 1) // group_size
     local = torch.tensor([[0.5, 1, 2][:groups], [2, 4, 8][:groups]], dtype=torch.float32)
-    global_scale = torch.tensor(0.5, dtype=torch.float32)
+    global_scale = torch.tensor(global_value, dtype=torch.float32)
     ctx = _context({"x.weight_scale": local, global_name: global_scale},
                    dequant_dtype=target, nvfp4_group_size=group_size)
     expected = [[v * float(local[r, c // group_size]) * 0.5 for c, v in enumerate(values)]
@@ -79,6 +82,27 @@ def test_nvfp4_local_global_scale_and_tail(group_size, target, name, global_name
     torch.testing.assert_close(raw, before, rtol=0, atol=0)
     torch.testing.assert_close(local, local_before, rtol=0, atol=0)
     torch.testing.assert_close(global_scale, global_before, rtol=0, atol=0)
+
+
+@pytest.mark.cpu
+@pytest.mark.parametrize("global_shape", [(), (1,)])
+def test_nvfp4_global_scale_matches_compressed_tensors(global_shape):
+    import torch
+    from compressed_tensors.quantization.lifecycle.forward import dequantize
+    from compressed_tensors.quantization.quant_scheme import NVFP4
+    from qlean.modifiers_engine._runtime.dequant_providers import nvfp4
+
+    codes = torch.arange(64, dtype=torch.uint8).reshape(2, 32) % 16
+    raw = codes[:, 0::2] | (codes[:, 1::2] << 4)
+    local = torch.tensor([[448, 13], [0.75, 120]], dtype=torch.float32).to(torch.float8_e4m3fn)
+    global_scale = torch.full(global_shape, 15123.7, dtype=torch.float32)
+    expected = dequantize(x_q=torch.tensor(_FP4, dtype=torch.float32)[codes.long()],
+                          scale=local.float(), args=NVFP4["weights"],
+                          global_scale=global_scale)
+    ctx = _context({"x.weight_scale": local, "x.weight_global_scale": global_scale},
+                   dequant_dtype="fp32", nvfp4_group_size=16)
+    actual = nvfp4(ctx, "x.weight_packed", raw)
+    torch.testing.assert_close(actual, expected, rtol=1e-6, atol=0)
 
 
 @pytest.mark.cpu
